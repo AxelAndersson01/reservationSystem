@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - Manage restaurant reservations, tables, and menu items">
+    <meta name="theme-color" content="#343a40">
+    <title>Admin Dashboard - Restaurant Booking System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Restaurant Booking Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Back to Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-4">
+        <div class="row g-4">
+            <!-- Menu Management -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Add menu items</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="menuItemForm" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="itemName" class="form-label">Item Name</label>
+                                <input type="text" class="form-control" id="itemName" required>
+                                <div class="invalid-feedback">Please enter an item name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="itemCategory" class="form-label">Category</label>
+                                <select class="form-select" id="itemCategory" required>
+                                    <option value="">Select a category</option>
+                                    <option value="Appetizer">Appetizer</option>
+                                    <option value="Main Course">Main Course</option>
+                                    <option value="Dessert">Dessert</option>
+                                    <option value="Drink">Drink</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a category.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="itemPrice" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="itemPrice"  min="0" required>
+                                <div class="invalid-feedback">Please enter a valid price.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Menu Item</button>
+                        </form>
+                        <hr>
+                        <div id="menuItemsList" class="list-group mt-3">
+                            <!-- Menu items will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Table Management -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Add Table</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="tableForm" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="tableNumber" class="form-label">Table Number</label>
+                                <input type="number" class="form-control" id="tableNumber" required>
+                                <div class="invalid-feedback">Please enter a table number.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Capacity</label>
+                                <input type="number" class="form-control" id="capacity" required>
+                                <div class="invalid-feedback">Please enter the table capacity.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Table</button>
+                        </form>
+                        <hr>
+                        <div id="tablesList" class="list-group mt-3">
+                            <!-- Tables will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reservation Management -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Reservation Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="dateFilter" class="form-label">Filter by Date</label>
+                            <input type="date" class="form-control" id="dateFilter">
+                        </div>
+                        <div id="reservationsList" class="list-group">
+                            <!-- Reservations will be listed here -->
+                        </div>
+                        <div id="pendingReservationsList" class="list-group mt-3">
+                            <!-- Pending reservations will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Restaurant Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Reservations Table -->
+                            <div class="col-md-8">
+                                <h6>Recent Reservations</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Customer</th>
+                                                <th>Table</th>
+                                                <th>Party Size</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reservationsTable">
+                                            <!-- Reservations will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Menu Statistics -->
+                            <div class="col-md-4">
+                                <h6>Menu Statistics by Category</h6>
+                                <div id="menuStats">
+                                    <!-- Menu statistics will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Utilization Section -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Table Utilization</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="utilizationDate" class="form-label">Select Date</label>
+                            <input type="date" class="form-control" id="utilizationDate">
+                        </div>
+                        <button class="btn btn-primary mb-3" id="loadUtilizationBtn">Show Utilization</button>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Table</th>
+                                        <th>Seats</th>
+                                        <th>Utilization (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="utilizationTable">
+                                    <!-- Utilization data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html> 
